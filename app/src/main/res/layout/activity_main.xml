@@ -7,47 +7,49 @@
     <FrameLayout
         android:id="@+id/video_layout"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@android:color/black">
-
-        <com.xiaoyezi.zhibo.zhibovideoview.widget.ZhiBoVideoView
-            android:id="@+id/videoView"
+        android:layout_height="match_parent">
+        <com.xiaoyezi.zhibo.zhibovideoview.widget.drag.DragVideoView
+            android:id="@+id/drag_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center" />
+            android:background="@android:color/black">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+                <com.xiaoyezi.zhibo.zhibovideoview.widget.ZhiBoVideoView
+                    android:id="@+id/videoView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
 
-        <com.xiaoyezi.zhibo.zhibovideoview.widget.ZhiBoMediaController
-            android:id="@+id/media_controller"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+                <com.xiaoyezi.zhibo.zhibovideoview.widget.ZhiBoMediaController
+                    android:id="@+id/media_controller"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </FrameLayout>
 
+            <LinearLayout
+                android:id="@+id/bottom_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/start"
+                    android:layout_margin="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="start" />
+
+                <TextView
+                    android:id="@+id/introduction"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="this is video introduciton ......" />
+            </LinearLayout>
+        </com.xiaoyezi.zhibo.zhibovideoview.widget.drag.DragVideoView>
     </FrameLayout>
-
-    <LinearLayout
-        android:id="@+id/bottom_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/start"
-            android:layout_margin="5dp"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:gravity="center"
-            android:text="start" />
-
-        <TextView
-            android:id="@+id/introduction"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="this is video introduciton ......" />
-
-
-    </LinearLayout>
-
-
 </LinearLayout>

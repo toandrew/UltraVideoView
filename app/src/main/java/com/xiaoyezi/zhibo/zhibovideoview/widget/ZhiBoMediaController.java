@@ -256,7 +256,7 @@ public class ZhiBoMediaController extends FrameLayout {
                 break;
         }
 
-        return true;
+        return false;
     }
 
     @Override

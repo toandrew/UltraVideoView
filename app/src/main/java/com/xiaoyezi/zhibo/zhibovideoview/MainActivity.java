@@ -12,8 +12,9 @@ import android.widget.TextView;
 
 import com.xiaoyezi.zhibo.zhibovideoview.widget.ZhiBoMediaController;
 import com.xiaoyezi.zhibo.zhibovideoview.widget.ZhiBoVideoView;
+import com.xiaoyezi.zhibo.zhibovideoview.widget.drag.DragVideoView;
 
-public class MainActivity extends AppCompatActivity implements ZhiBoVideoView.VideoViewCallback {
+public class MainActivity extends AppCompatActivity implements ZhiBoVideoView.VideoViewCallback, DragVideoView.Callback {
 
     private static final String TAG = "MainActivity";
     private static final String SEEK_POSITION_KEY = "SEEK_POSITION_KEY";
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements ZhiBoVideoView.Vi
     View mVideoLayout;
     TextView mStart;
 
+    private DragVideoView mDragVideoView;
+
     private int mSeekPosition;
     private int cachedHeight;
     private boolean mIsFullscreen;
@@ -34,6 +37,9 @@ public class MainActivity extends AppCompatActivity implements ZhiBoVideoView.Vi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mDragVideoView = (DragVideoView) findViewById(R.id.drag_view);
+        mDragVideoView.setCallback(this);
 
         mVideoLayout = findViewById(R.id.video_layout);
         mBottomLayout = findViewById(R.id.bottom_layout);
@@ -47,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements ZhiBoVideoView.Vi
         mStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mDragVideoView.show();
                 if (mSeekPosition > 0) {
                     mVideoView.seekTo(mSeekPosition);
                 }
@@ -62,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements ZhiBoVideoView.Vi
             }
         });
 
+        //
     }
 
     @Override
@@ -82,16 +90,21 @@ public class MainActivity extends AppCompatActivity implements ZhiBoVideoView.Vi
         mVideoLayout.post(new Runnable() {
             @Override
             public void run() {
+
+                mDragVideoView.show();
+
                 int width = mVideoLayout.getWidth();
                 cachedHeight = (int) (width * 405f / 720f);
 //                cachedHeight = (int) (width * 3f / 4f);
 //                cachedHeight = (int) (width * 9f / 16f);
                 ViewGroup.LayoutParams videoLayoutParams = mVideoLayout.getLayoutParams();
                 videoLayoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-                videoLayoutParams.height = cachedHeight;
+                videoLayoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                //videoLayoutParams.height = cachedHeight;
                 mVideoLayout.setLayoutParams(videoLayoutParams);
                 mVideoView.setVideoPath(VIDEO_URL);
                 mVideoView.requestFocus();
+                mVideoView.start();
             }
         });
     }
@@ -135,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements ZhiBoVideoView.Vi
         } else {
             ViewGroup.LayoutParams layoutParams = mVideoLayout.getLayoutParams();
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            layoutParams.height = this.cachedHeight;
+            layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;//this.cachedHeight;
             mVideoLayout.setLayoutParams(layoutParams);
             mBottomLayout.setVisibility(View.VISIBLE);
         }
@@ -172,4 +185,8 @@ public class MainActivity extends AppCompatActivity implements ZhiBoVideoView.Vi
         }
     }
 
+    @Override
+    public void onDisappear(int direct) {
+
+    }
 }
