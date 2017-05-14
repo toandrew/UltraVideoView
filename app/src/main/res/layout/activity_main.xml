@@ -15,12 +15,12 @@
             android:background="@android:color/black">
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_height="match_parent">
                 <com.xiaoyezi.zhibo.zhibovideoview.widget.ZhiBoVideoView
                     android:id="@+id/videoView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"/>
 
                 <com.xiaoyezi.zhibo.zhibovideoview.widget.ZhiBoMediaController
                     android:id="@+id/media_controller"

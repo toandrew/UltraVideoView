@@ -97,14 +97,14 @@ public class MainActivity extends AppCompatActivity implements ZhiBoVideoView.Vi
                 cachedHeight = (int) (width * 405f / 720f);
 //                cachedHeight = (int) (width * 3f / 4f);
 //                cachedHeight = (int) (width * 9f / 16f);
-                ViewGroup.LayoutParams videoLayoutParams = mVideoLayout.getLayoutParams();
-                videoLayoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-                videoLayoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-                //videoLayoutParams.height = cachedHeight;
-                mVideoLayout.setLayoutParams(videoLayoutParams);
+//                ViewGroup.LayoutParams videoLayoutParams = mVideoLayout.getLayoutParams();
+//                videoLayoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+//                videoLayoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+//                //videoLayoutParams.height = cachedHeight;
+//                mVideoLayout.setLayoutParams(videoLayoutParams);
                 mVideoView.setVideoPath(VIDEO_URL);
-                mVideoView.requestFocus();
-                mVideoView.start();
+                //mVideoView.requestFocus();
+                //mVideoView.start();
             }
         });
     }

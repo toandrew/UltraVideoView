@@ -127,6 +127,8 @@ public class DragVideoView extends ViewGroup {
      */
     private int mPlayerMinWidth;
 
+    private int mPlayerMaxHeight = 0;
+
     /**
      * 当前拖动的方向
      */
@@ -423,6 +425,8 @@ public class DragVideoView extends ViewGroup {
         int maxWidth = MeasureSpec.getSize(widthMeasureSpec);
         int maxHeight = MeasureSpec.getSize(heightMeasureSpec);
 
+        mPlayerMaxHeight = maxHeight;
+
         setMeasuredDimension(resolveSizeAndState(maxWidth, widthMeasureSpec, 0),
                 resolveSizeAndState(maxHeight, heightMeasureSpec, 0));
 
@@ -465,6 +469,9 @@ public class DragVideoView extends ViewGroup {
         int childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(widthCurSize, MeasureSpec.EXACTLY);
 
         int heightSize = (int) (MeasureSpec.getSize(childWidthMeasureSpec) / VIDEO_RATIO);
+        if (heightSize > mPlayerMaxHeight && mPlayerMaxHeight > 0) {
+            heightSize = mPlayerMaxHeight;
+        }
         int childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY);
 
         mPlayer.measure(childWidthMeasureSpec, childHeightMeasureSpec);
