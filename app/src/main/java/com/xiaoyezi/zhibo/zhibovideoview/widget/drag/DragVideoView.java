@@ -30,7 +30,6 @@ import android.view.ViewGroup;
 
 import java.lang.ref.WeakReference;
 
-
 public class DragVideoView extends ViewGroup {
     /**
      * 当前拖动的方向
@@ -127,8 +126,6 @@ public class DragVideoView extends ViewGroup {
      */
     private int mPlayerMinWidth;
 
-    private int mPlayerMaxHeight = 0;
-
     /**
      * 当前拖动的方向
      */
@@ -162,6 +159,27 @@ public class DragVideoView extends ViewGroup {
      */
     private int mDisappearDirect = SLIDE_RESTORE_ORIGINAL;
 
+    // 以下为扩充字段
+    /**
+     * 播放器最大高度：parent的高度
+     */
+    private int mPlayerMaxHeight = 0;
+
+    /**
+     * 是否允许单点击时最大化
+     */
+    private boolean mEnableClickToMaximize = true;
+
+    /**
+     * 是否允许单点击时最小化
+     */
+    private boolean mEnableClickToMinimize = false;
+
+    /**
+     * 是否支持左后滑动时，隐藏播放器
+     */
+    private boolean mEnableSlideOut = false;
+
     public DragVideoView(Context context) {
         this(context, null);
     }
@@ -175,11 +193,6 @@ public class DragVideoView extends ViewGroup {
         init();
     }
 
-    private void init() {
-        mDragHelper = CustomViewDragHelper.create(this, 1f, new MyHelperCallback());
-        setBackgroundColor(Color.TRANSPARENT);
-    }
-
     public void restorePosition() {//恢复原始状态
         mPlayer.setAlpha(1f);
         this.setAlpha(0f);//当前DragVideoView变成透明
@@ -189,10 +202,76 @@ public class DragVideoView extends ViewGroup {
         mVerticalOffset = 1f;
     }
 
-    public void show() {
+    /**
+     * 最大化显示
+     */
+    public void showMax() {
         this.setAlpha(1f);//当前DragVideoView变成全部显示
         mDragDirect = VERTICAL;
         maximize();
+    }
+
+    /**
+     * 最小化显示
+     */
+    public void showMin() {
+        this.setAlpha(1f);//当前DragVideoView变成全部显示
+        mDragDirect = VERTICAL;
+        minimize();
+    }
+
+    /**
+     * Return if user can maximize minimized view on click.
+     */
+    public boolean isClickToMaximizeEnabled() {
+        return mEnableClickToMaximize;
+    }
+
+    /**
+     * Enable or disable click to maximize view when dragged view is minimized
+     * If your content have a touch/click listener (like YoutubePlayer), you
+     * need disable it to active this feature.
+     *
+     * @param enableClickToMaximize to enable or disable the click.
+     */
+    public void setClickToMaximizeEnabled(boolean enableClickToMaximize) {
+        this.mEnableClickToMaximize = enableClickToMaximize;
+    }
+
+    /**
+     * Return if user can minimize maximized view on click.
+     */
+    public boolean isClickToMinimizeEnabled() {
+        return mEnableClickToMinimize;
+    }
+
+    /**
+     * Enable or disable click to minimize view when dragged view is maximized
+     * If your content have a touch/click listener (like YoutubePlayer), you
+     * need disable it to active this feature.
+     *
+     * @param enableClickToMinimize to enable or disable the click.
+     */
+    public void setClickToMinimizeEnabled(boolean enableClickToMinimize) {
+        this.mEnableClickToMinimize = enableClickToMinimize;
+    }
+
+    /**
+     * Whether slide out the player is enabled
+     *
+     * @return
+     */
+    public boolean isSlideOutEnabled() {
+        return mEnableSlideOut;
+    }
+
+    /**
+     * Enable or disable slide out action
+     *
+     * @param enableSlideOut
+     */
+    public void setSlideOutEnabled(boolean enableSlideOut) {
+        mEnableSlideOut = enableSlideOut;
     }
 
     @Override
@@ -236,10 +315,11 @@ public class DragVideoView extends ViewGroup {
                         if (Math.sqrt(dx * dx + dy * dy) < slop) {
                             mDragDirect = VERTICAL;
 
-                            if (mIsMinimum)
+                            if (mIsMinimum && isClickToMaximizeEnabled())
                                 maximize();
-                            else
+                            else if (isClickToMinimizeEnabled()) {
                                 minimize();
+                            }
                         }
                     }
                 }
@@ -252,6 +332,11 @@ public class DragVideoView extends ViewGroup {
 
         mDragHelper.processTouchEvent(event);
         return isHit;
+    }
+
+    private void init() {
+        mDragHelper = CustomViewDragHelper.create(this, 1f, new MyHelperCallback());
+        setBackgroundColor(Color.TRANSPARENT);
     }
 
     private void maximize() {
@@ -391,9 +476,9 @@ public class DragVideoView extends ViewGroup {
                 else if (yvel < 0 || (yvel == 0 && mVerticalOffset < 0.5f))
                     maximize();
             } else if (mIsMinimum && mDragDirect == HORIZONTAL) { //如果已经最小化窗口，并且是在水平方向上
-                if ((mHorizontalOffset < LEFT_DRAG_DISAPPEAR_OFFSET && xvel < 0))
+                if (mHorizontalOffset < LEFT_DRAG_DISAPPEAR_OFFSET && xvel < 0 && isSlideOutEnabled())
                     slideToLeft(); //向左滑动
-                else if ((mHorizontalOffset > RIGHT_DRAG_DISAPPEAR_OFFSET && xvel > 0))
+                else if (mHorizontalOffset > RIGHT_DRAG_DISAPPEAR_OFFSET && xvel > 0 && isSlideOutEnabled())
                     slideToRight();// 向右滑动
                 else
                     slideToOriginalPosition();//原地不动

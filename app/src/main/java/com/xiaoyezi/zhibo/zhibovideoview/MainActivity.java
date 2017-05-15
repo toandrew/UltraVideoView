@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements ZhiBoVideoView.Vi
         mStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDragVideoView.show();
+                mDragVideoView.showMax();
                 if (mSeekPosition > 0) {
                     mVideoView.seekTo(mSeekPosition);
                 }
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements ZhiBoVideoView.Vi
             @Override
             public void run() {
 
-                mDragVideoView.show();
+                mDragVideoView.showMin();
 
                 int width = mVideoLayout.getWidth();
                 cachedHeight = (int) (width * 405f / 720f);
